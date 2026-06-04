@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../../../src/extensions/openclaw/whatsapp/src/inbound/save-media.runtime.ts"],"sourcesContent":["export { saveMediaBuffer } from \"openclaw/plugin-sdk/media-store\";\n"],"names":["saveMediaBuffer"],"mappings":";;;;+BAASA;;;eAAAA,2BAAe;;;4BAAQ"}

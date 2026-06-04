@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "comment": "Type-checks kitty's own framework code only. Vendored openclaw extensions under src/extensions/*/ are intentionally excluded: they are authored against openclaw's real SDK types and are bundled (not type-checked) by the esbuild build, just like openclaw ships them via tsdown.",
+  "include": [
+    "src/main.ts",
+    "src/app.module.ts",
+    "src/common/**/*.ts",
+    "src/extensions/extensions.module.ts",
+    "src/extensions/*-host/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist", "src/extensions/openclaw"]
+}

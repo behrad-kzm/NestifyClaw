@@ -1,0 +1,36 @@
+{
+  "$schema": "https://swc.rs/schema.json",
+  "exclude": [
+    ".*\\.spec\\.ts$",
+    ".*\\.test\\.ts$",
+    ".*test-utils\\.ts$",
+    ".*test-shared\\.ts$",
+    ".*e2e-harness\\.ts$",
+    "src/extensions/openclaw/telegram/index\\.ts$",
+    "src/extensions/openclaw/telegram/setup-entry\\.ts$",
+    "src/extensions/openclaw/telegram/src/telegram-ingress-worker\\.ts$",
+    "src/extensions/openclaw/whatsapp/index\\.ts$",
+    "src/extensions/openclaw/whatsapp/setup-entry\\.ts$"
+  ],
+  "jsc": {
+    "target": "es2022",
+    "baseUrl": ".",
+    "paths": {
+      "openclaw/plugin-sdk/*": ["./src/common/openclaw/plugin-sdk/*"],
+      "openclaw/*": ["./src/common/openclaw/*"]
+    },
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true,
+      "dynamicImport": true
+    },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
+    },
+    "keepClassNames": true
+  },
+  "module": {
+    "type": "commonjs"
+  }
+}

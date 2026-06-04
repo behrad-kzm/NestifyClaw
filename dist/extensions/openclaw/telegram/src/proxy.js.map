@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../../src/extensions/openclaw/telegram/src/proxy.ts"],"sourcesContent":["export { getProxyUrlFromFetch, makeProxyFetch } from \"openclaw/plugin-sdk/fetch-runtime\";\n"],"names":["getProxyUrlFromFetch","makeProxyFetch"],"mappings":";;;;;;;;;;;QAASA;eAAAA,kCAAoB;;QAAEC;eAAAA,4BAAc;;;8BAAQ"}

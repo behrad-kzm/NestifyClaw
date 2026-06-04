@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/extensions/openclaw/telegram/allow-from.ts"],"sourcesContent":["export * from \"./src/allow-from.js\";\n"],"names":[],"mappings":";;;;qBAAc"}

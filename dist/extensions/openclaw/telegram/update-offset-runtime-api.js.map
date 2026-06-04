@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/extensions/openclaw/telegram/update-offset-runtime-api.ts"],"sourcesContent":["export { deleteTelegramUpdateOffset } from \"./src/update-offset-store.runtime.js\";\n"],"names":["deleteTelegramUpdateOffset"],"mappings":";;;;+BAASA;;;eAAAA,oDAA0B;;;0CAAQ"}

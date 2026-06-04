@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/extensions/openclaw/whatsapp/config-api.ts"],"sourcesContent":["export {\n  buildChannelConfigSchema,\n  WhatsAppConfigSchema,\n} from \"openclaw/plugin-sdk/bundled-channel-config-schema\";\n"],"names":["WhatsAppConfigSchema","buildChannelConfigSchema"],"mappings":";;;;;;;;;;;QAEEA;eAAAA,gDAAoB;;QADpBC;eAAAA,oDAAwB;;;4CAEnB"}
