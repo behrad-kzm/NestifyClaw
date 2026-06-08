@@ -1,7 +1,7 @@
 /**
  * Runtime stub used by auto-generated openclaw/plugin-sdk adapter modules.
  *
- * The vendored extensions (copied unchanged) import ~100 plugin-sdk modules
+ * The vendored connectors (copied unchanged) import ~100 plugin-sdk modules
  * each. Only the inbound read path is implemented for real (see modules marked
  * `@kitty-real`); everything else resolves to a tolerant stub so the extension
  * loads without crashing. A stub is callable, constructable, and returns itself
@@ -10,7 +10,7 @@
  */
 
 /**
- * Type of a stub value. Aliased to `any` on purpose: the vendored extensions
+ * Type of a stub value. Aliased to `any` on purpose: the vendored connectors
  * are authored against openclaw's real SDK types (functions that return
  * strings, arrays, generic stores, etc.), so the stub stand-ins must be fully
  * permissive — callable with type arguments, constructable, indexable, and

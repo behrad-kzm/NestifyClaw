@@ -1,5 +1,5 @@
 /**
- * Scans copied openclaw extensions under src/extensions for every
+ * Scans vendored openclaw extensions under src/connectors/<channel>/extension for every
  * `openclaw/plugin-sdk/*` (and other `openclaw/*`) import, and generates a
  * matching adapter module under src/common/openclaw/** exporting the imported
  * symbols as tolerant stubs.
@@ -14,7 +14,7 @@ import * as path from 'node:path';
 import * as ts from 'typescript';
 
 const ROOT = path.resolve(__dirname, '..');
-const EXT_DIR = path.join(ROOT, 'src', 'extensions');
+const CONNECTORS_DIR = path.join(ROOT, 'src', 'connectors');
 const ADAPTER_ROOT = path.join(ROOT, 'src', 'common');
 
 type ModuleNeeds = {
@@ -240,9 +240,26 @@ function generate(): void {
   );
 }
 
+function listExtensionDirs(): string[] {
+  if (!fs.existsSync(CONNECTORS_DIR)) {
+    return [];
+  }
+  const dirs: string[] = [];
+  for (const entry of fs.readdirSync(CONNECTORS_DIR, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const extensionDir = path.join(CONNECTORS_DIR, entry.name, 'extension');
+    if (fs.existsSync(extensionDir)) {
+      dirs.push(extensionDir);
+    }
+  }
+  return dirs;
+}
+
 function main(): void {
   const files: string[] = [];
-  walk(EXT_DIR, files);
+  for (const extensionDir of listExtensionDirs()) {
+    walk(extensionDir, files);
+  }
   for (const f of files) collect(f);
   generate();
 }

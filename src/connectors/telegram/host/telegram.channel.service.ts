@@ -9,13 +9,13 @@ import { ConfigService } from '@nestjs/config';
 import { Bot } from 'grammy';
 import type { Message } from 'grammy/types';
 import { run, type RunnerHandle } from '@grammyjs/runner';
-import type { KittyChannel } from '../../common/extension/kitty-extension';
+import type { KittyChannel } from '../../../common/extension/kitty-extension';
 // Pure parsing helpers from the vendored openclaw extension (copied unchanged).
 // Resolved through the src/common openclaw adapter.
 import {
   buildSenderName,
   getTelegramTextParts,
-} from '../openclaw/telegram/src/bot/body-helpers';
+} from '../extension/src/bot/body-helpers';
 
 /**
  * Host module glue that runs the vendored Telegram extension's bot engine and

@@ -6,11 +6,11 @@
     ".*test-utils\\.ts$",
     ".*test-shared\\.ts$",
     ".*e2e-harness\\.ts$",
-    "src/extensions/openclaw/telegram/index\\.ts$",
-    "src/extensions/openclaw/telegram/setup-entry\\.ts$",
-    "src/extensions/openclaw/telegram/src/telegram-ingress-worker\\.ts$",
-    "src/extensions/openclaw/whatsapp/index\\.ts$",
-    "src/extensions/openclaw/whatsapp/setup-entry\\.ts$"
+    "src/connectors/telegram/extension/index\\.ts$",
+    "src/connectors/telegram/extension/setup-entry\\.ts$",
+    "src/connectors/telegram/extension/src/telegram-ingress-worker\\.ts$",
+    "src/connectors/whatsapp/extension/index\\.ts$",
+    "src/connectors/whatsapp/extension/setup-entry\\.ts$"
   ],
   "jsc": {
     "target": "es2022",

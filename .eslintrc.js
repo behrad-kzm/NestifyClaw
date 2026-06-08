@@ -21,7 +21,7 @@ module.exports = {
     'node_modules',
     // Vendored openclaw extensions are copied verbatim and kept pristine for
     // drop-in fidelity; do not lint/reformat them.
-    'src/extensions/openclaw/',
+    'src/connectors/*/extension/',
   ],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',

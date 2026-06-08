@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ExtensionsModule } from './extensions/extensions.module';
+import { ConnectorsModule } from './connectors/connectors.module';
+import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
@@ -8,7 +9,8 @@ import { ExtensionsModule } from './extensions/extensions.module';
       isGlobal: true,
       envFilePath: ['.env'],
     }),
-    ExtensionsModule,
+    CoreModule,
+    ConnectorsModule,
   ],
 })
 export class AppModule {}

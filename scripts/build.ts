@@ -2,11 +2,11 @@
  * Build script for kitty-agents.
  *
  * We bundle with esbuild rather than `tsc`/`nest build` on purpose: vendored
- * openclaw extensions are authored against openclaw's real SDK types, so
+ * openclaw connectors are authored against openclaw's real SDK types, so
  * type-checking them against our adapter stubs is not meaningful (openclaw
  * itself ships via the `tsdown` bundler, not tsc). esbuild transpiles + bundles
  * the reachable graph, resolves the `openclaw/*` path alias from tsconfig, and
- * rewrites the extensions' ESM `.js` import specifiers to their `.ts` sources.
+ * rewrites the connectors' ESM `.js` import specifiers to their `.ts` sources.
  *
  * Use `npm run typecheck` to type-check kitty's own framework code.
  */

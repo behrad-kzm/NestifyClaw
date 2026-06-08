@@ -6,7 +6,7 @@
  * implements {@link KittyChannel}. The framework starts every registered
  * channel on application bootstrap and stops it on shutdown.
  *
- * The vendored openclaw extension under `src/extensions/<id>` stays pristine;
+ * The vendored openclaw extension under `src/connectors/<channel>/extension` stays pristine;
  * a thin host module adapts it to this contract.
  */
 export interface IncomingChannelMessage {

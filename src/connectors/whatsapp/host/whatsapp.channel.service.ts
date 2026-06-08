@@ -4,23 +4,22 @@ import {
   OnApplicationBootstrap,
   OnModuleDestroy,
 } from '@nestjs/common';
-import makeWASocket, {
-  DisconnectReason,
-  useMultiFileAuthState,
-  type WASocket,
-} from 'baileys';
+import type { WASocket } from 'baileys';
 import * as qrcode from 'qrcode-terminal';
-import type { KittyChannel } from '../../common/extension/kitty-extension';
-// Real message-parsing helper from the vendored openclaw extension (copied
-// unchanged), resolved through the src/common openclaw adapter.
-import { extractText } from '../openclaw/whatsapp/src/inbound/extract';
+import type { KittyChannel } from '../../../common/extension/kitty-extension';
 
 const AUTH_DIR = '.wa-auth';
+
+type BaileysModule = typeof import('baileys');
 
 /**
  * Host module glue that runs the vendored WhatsApp extension's engine (baileys)
  * and prints every incoming message. WhatsApp authenticates via QR pairing
  * (scan once from your phone), not a bot token; credentials persist in .wa-auth.
+ *
+ * baileys is loaded via dynamic import() so the app can boot without resolving
+ * whatsapp-rust-bridge (baileys' ESM-only dependency) until WhatsApp is
+ * explicitly enabled. Set WHATSAPP_ENABLED=true in .env to start the connector.
  */
 @Injectable()
 export class WhatsappChannelService
@@ -31,6 +30,8 @@ export class WhatsappChannelService
   private readonly logger = new Logger('WhatsappChannel');
   private sock?: WASocket;
   private stopping = false;
+  private baileys?: BaileysModule;
+  private extractText?: (message: unknown) => string | undefined;
 
   async onApplicationBootstrap(): Promise<void> {
     await this.start();
@@ -41,6 +42,12 @@ export class WhatsappChannelService
   }
 
   async start(): Promise<void> {
+    if (process.env.WHATSAPP_ENABLED !== 'true') {
+      this.logger.log(
+        'WhatsApp connector is disabled. Set WHATSAPP_ENABLED=true in .env to enable.',
+      );
+      return;
+    }
     this.stopping = false;
     await this.connect();
   }
@@ -55,7 +62,24 @@ export class WhatsappChannelService
     this.sock = undefined;
   }
 
+  private async loadBaileys(): Promise<BaileysModule> {
+    this.baileys ??= await import('baileys');
+    return this.baileys;
+  }
+
+  private async loadExtractText(): Promise<
+    (message: unknown) => string | undefined
+  > {
+    if (!this.extractText) {
+      const mod = await import('../extension/src/inbound/extract.js');
+      this.extractText = mod.extractText;
+    }
+    return this.extractText;
+  }
+
   private async connect(): Promise<void> {
+    const { makeWASocket, useMultiFileAuthState, DisconnectReason } =
+      await this.loadBaileys();
     const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
 
     // baileys expects a pino-like logger; a silent one keeps our console clean.
@@ -107,21 +131,22 @@ export class WhatsappChannelService
       if (type !== 'notify') return; // only fresh inbound messages
       for (const m of messages) {
         if (!m.message || m.key.fromMe) continue;
-        this.handleMessage(m);
+        void this.handleMessage(m);
       }
     });
   }
 
-  private handleMessage(m: {
+  private async handleMessage(m: {
     key: { remoteJid?: string | null; participant?: string | null };
     pushName?: string | null;
     message?: unknown;
-  }): void {
+  }): Promise<void> {
     const chatId = m.key.remoteJid ?? 'unknown';
     const isGroup = chatId.endsWith('@g.us');
     const senderName = m.pushName ?? 'unknown';
     const senderId = (isGroup ? m.key.participant : m.key.remoteJid) ?? '?';
-    const text = safe(() => extractText(m.message as any), undefined);
+    const extract = await this.loadExtractText();
+    const text = safe(() => extract(m.message), undefined);
 
     this.logger.log(
       `new message | chat=${chatId}${isGroup ? ' (group)' : ''} | from=${senderName} (id=${senderId}) | text=${JSON.stringify(text ?? '')}`,
