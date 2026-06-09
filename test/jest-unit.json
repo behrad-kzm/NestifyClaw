@@ -1,14 +1,16 @@
 {
-  "displayName": "e2e",
+  "displayName": "unit",
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": "unit/.*\\.spec\\.ts$",
   "transform": {
     "^.+\\.(t|j)s$": ["ts-jest", { "tsconfig": "<rootDir>/../tsconfig.json" }]
   },
   "moduleNameMapper": {
     "^openclaw/plugin-sdk/(.*)$": "<rootDir>/../src/common/openclaw/plugin-sdk/$1",
     "^openclaw/(.*)$": "<rootDir>/../src/common/openclaw/$1"
-  }
+  },
+  "collectCoverageFrom": ["../src/**/*.ts", "!../src/**/extension/**", "!../src/core/openclaw/**"],
+  "coverageDirectory": "../coverage"
 }

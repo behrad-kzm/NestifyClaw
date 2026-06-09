@@ -132,7 +132,8 @@ WhatsApp uses dynamic `import('baileys')` so the app can boot without loading ba
 | `npm run start:prod` | Run production bundle (`node dist/main.mjs`) |
 | `npm run gen:adapter` | Scan vendored OpenClaw imports and regenerate plugin-sdk stubs |
 | `npm run lint` | ESLint |
-| `npm run test` | Jest unit tests |
+| `npm run test` | Unit tests (`test/unit/`) |
+| `npm run test:e2e` | App bootstrap + gateway pipeline e2e |
 
 ### Build notes
 
