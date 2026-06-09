@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../../../../src/extensions/openclaw/whatsapp/src/auto-reply/monitor/group-activation.runtime.ts"],"sourcesContent":["export { normalizeGroupActivation } from \"openclaw/plugin-sdk/group-activation\";\n"],"names":["normalizeGroupActivation"],"mappings":";;;;+BAASA;;;eAAAA,yCAAwB;;;iCAAQ"}

@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/extensions/openclaw/whatsapp/legacy-state-migrations-api.ts"],"sourcesContent":["export { detectWhatsAppLegacyStateMigrations } from \"./src/state-migrations.js\";\n"],"names":["detectWhatsAppLegacyStateMigrations"],"mappings":";;;;+BAASA;;;eAAAA,oDAAmC;;;iCAAQ"}

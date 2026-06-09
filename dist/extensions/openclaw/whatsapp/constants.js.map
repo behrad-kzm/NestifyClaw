@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/extensions/openclaw/whatsapp/constants.ts"],"sourcesContent":["export { DEFAULT_WEB_MEDIA_BYTES } from \"./src/auto-reply/constants.js\";\n"],"names":["DEFAULT_WEB_MEDIA_BYTES"],"mappings":";;;;+BAASA;;;eAAAA,kCAAuB;;;2BAAQ"}

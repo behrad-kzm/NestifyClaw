@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../../src/extensions/openclaw/telegram/src/bot.agent.runtime.ts"],"sourcesContent":["export { resolveDefaultAgentId } from \"openclaw/plugin-sdk/agent-runtime\";\n"],"names":["resolveDefaultAgentId"],"mappings":";;;;+BAASA;;;eAAAA,mCAAqB;;;8BAAQ"}

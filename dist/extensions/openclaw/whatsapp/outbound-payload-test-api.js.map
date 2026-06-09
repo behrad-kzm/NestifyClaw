@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/extensions/openclaw/whatsapp/outbound-payload-test-api.ts"],"sourcesContent":["export { whatsappOutbound } from \"./src/outbound-adapter.js\";\n"],"names":["whatsappOutbound"],"mappings":";;;;+BAASA;;;eAAAA,iCAAgB;;;iCAAQ"}

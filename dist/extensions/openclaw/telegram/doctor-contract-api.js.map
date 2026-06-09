@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/extensions/openclaw/telegram/doctor-contract-api.ts"],"sourcesContent":["export { normalizeCompatibilityConfig, legacyConfigRules } from \"./src/doctor-contract.js\";\n"],"names":["legacyConfigRules","normalizeCompatibilityConfig"],"mappings":";;;;;;;;;;;QAAuCA;eAAAA,iCAAiB;;QAA/CC;eAAAA,4CAA4B;;;gCAA2B"}

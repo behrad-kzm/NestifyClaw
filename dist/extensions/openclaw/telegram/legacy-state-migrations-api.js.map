@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/extensions/openclaw/telegram/legacy-state-migrations-api.ts"],"sourcesContent":["export { detectTelegramLegacyStateMigrations } from \"./src/state-migrations.js\";\n"],"names":["detectTelegramLegacyStateMigrations"],"mappings":";;;;+BAASA;;;eAAAA,oDAAmC;;;iCAAQ"}
