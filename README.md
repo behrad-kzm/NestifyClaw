@@ -170,4 +170,4 @@ See the [OpenClaw docs](https://github.com/openclaw/openclaw/tree/main/docs) for
 
 ## License
 
-UNLICENSED (private).
+[MIT](LICENSE)
