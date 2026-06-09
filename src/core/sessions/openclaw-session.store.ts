@@ -135,7 +135,7 @@ export class OpenClawSessionStore implements OnModuleInit {
     try {
       const raw = await readFile(this.indexPath(), 'utf8');
       const parsed = JSON.parse(raw) as SessionIndex;
-      return parsed && typeof parsed === 'object' ? parsed : {};
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
     } catch {
       return {};
     }
