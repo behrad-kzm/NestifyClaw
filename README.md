@@ -118,6 +118,9 @@ cp .env.example .env
 | `TELEGRAM_BOT_TOKEN` | For Telegram | Bot token from [@BotFather](https://t.me/BotFather). If unset, Telegram stays off with a warning. |
 | `WHATSAPP_ENABLED` | For WhatsApp | Set to `true` to start the WhatsApp connector (QR pairing). Default: disabled. |
 | `PORT` | No | HTTP port (default `3000`). |
+| `SESSION_DM_SCOPE` | No | DM isolation: `main` (default), `per-peer`, `per-channel-peer`, `per-account-channel-peer`. Use `per-channel-peer` for multi-user bots. |
+| `SESSION_MAIN_KEY` | No | Main DM bucket name when `SESSION_DM_SCOPE=main` (default `main`). |
+| `SESSION_IDENTITY_LINKS` | No | JSON map linking one person across channels (OpenClaw `session.identityLinks`). |
 
 WhatsApp uses dynamic `import('baileys')` so the app can boot without loading baileys until explicitly enabled.
 

@@ -38,6 +38,8 @@ describe('GatewayService', () => {
       agentId: 'main',
       sessionKey: 'agent:main:telegram:7',
       targetKind: 'agent',
+      channel: 'telegram',
+      chatId: '7',
     });
     sessions.load.mockResolvedValue(null);
     media.resolveInbound.mockResolvedValue(null);
@@ -92,6 +94,8 @@ describe('GatewayService', () => {
         agentId: 'main',
         sessionKey: 'agent:main:telegram:7',
         targetKind: 'agent',
+        channel: 'telegram',
+        chatId: '7',
       },
       message,
       session: null,
@@ -102,6 +106,8 @@ describe('GatewayService', () => {
         agentId: 'main',
         sessionKey: 'agent:main:telegram:7',
         targetKind: 'agent',
+        channel: 'telegram',
+        chatId: '7',
       },
       { text: 'agent reply' },
     );

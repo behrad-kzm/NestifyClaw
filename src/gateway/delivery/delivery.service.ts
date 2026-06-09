@@ -1,23 +1,34 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { DeliveryPort, OutboundReply, RouteTarget } from '../../common/types';
+import { DeliveryRegistryService } from './delivery-registry.service';
 
 /**
  * Outbound delivery (bucket G).
  *
- * NOTE: the *concrete* delivery impl is inherently channel-specific (Telegram
- * sendMessage vs WhatsApp send). In the end state each connector binds its own
- * DELIVERY_PORT provider. This core default just logs, so the pipeline is
- * runnable before a connector is wired in.
- *
- * TODO: port openclaw reply pipeline — chunking, delivery queue, reactions.
+ * Delegates to a per-channel handler registered by connector host modules
+ * (e.g. Telegram). Falls back to logging when no handler is registered.
  */
 @Injectable()
 export class DeliveryService implements DeliveryPort {
   private readonly logger = new Logger('Delivery');
 
+  constructor(
+    @Inject(DeliveryRegistryService)
+    private readonly registry: DeliveryRegistryService,
+  ) {}
+
   async deliver(target: RouteTarget, reply: OutboundReply): Promise<void> {
+    const channel = target.channel;
+    if (channel) {
+      const handler = this.registry.get(channel);
+      if (handler) {
+        await handler(target, reply);
+        return;
+      }
+    }
+
     this.logger.log(
-      `(stub delivery) -> ${target.sessionKey}: ${JSON.stringify(reply.text ?? reply.media ?? '')}`,
+      `(no delivery handler) -> ${target.sessionKey}: ${JSON.stringify(reply.text ?? reply.media ?? '')}`,
     );
   }
 }

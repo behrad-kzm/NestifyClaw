@@ -6,6 +6,8 @@
     "src/app.module.ts",
     "src/common/**/*.ts",
     "src/core/host/**/*.ts",
+    "src/core/ollama/**/*.ts",
+    "src/core/sessions/**/*.ts",
     "src/core/core.module.ts",
     "src/gateway/**/*.ts",
     "src/connectors/connectors.module.ts",

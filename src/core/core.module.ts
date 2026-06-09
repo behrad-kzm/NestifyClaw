@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AgentRuntimeModule } from './host/agent-runtime.module';
+import { SessionsStorageModule } from './sessions/sessions-storage.module';
 
 /**
  * Component 3 — the brain (agent runtime).
@@ -10,7 +11,7 @@ import { AgentRuntimeModule } from './host/agent-runtime.module';
  * Gateway (Component 2) calls into host via AGENT_RUNTIME_PORT.
  */
 @Module({
-  imports: [AgentRuntimeModule],
-  exports: [AgentRuntimeModule],
+  imports: [AgentRuntimeModule, SessionsStorageModule],
+  exports: [AgentRuntimeModule, SessionsStorageModule],
 })
 export class CoreModule {}

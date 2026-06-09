@@ -11,11 +11,20 @@
  *   agents:     `src/core/openclaw`
  * A thin host module adapts it to this contract.
  */
+/** OpenClaw-aligned chat surface kind for routing. */
+export type ChannelChatType = 'direct' | 'group' | 'channel' | 'room';
+
 export interface IncomingChannelMessage {
   /** Channel id, e.g. "telegram". */
   channel: string;
   /** Stable chat/conversation id within the channel. */
   chatId: string;
+  /** DM vs group vs channel; defaults to `direct` when omitted. */
+  chatType?: ChannelChatType;
+  /** Peer id used in session keys (user id, group id, JID, …). */
+  peerId?: string;
+  /** Channel account id when multi-account; defaults to `default`. */
+  accountId?: string;
   /** Sender display name, when available. */
   senderName?: string;
   /** Sender id within the channel, when available. */

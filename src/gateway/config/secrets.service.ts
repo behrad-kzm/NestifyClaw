@@ -10,9 +10,7 @@ import type { SecretsPort } from '../../common/types';
  */
 @Injectable()
 export class SecretsService implements SecretsPort {
-  constructor(
-    @Inject(ConfigService) private readonly config: ConfigService,
-  ) {}
+  constructor(@Inject(ConfigService) private readonly config: ConfigService) {}
 
   async get(key: string): Promise<string | undefined> {
     return this.config.get<string>(key);

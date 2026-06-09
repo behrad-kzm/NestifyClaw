@@ -21,6 +21,10 @@ export interface RouteTarget {
   agentId: string;
   sessionKey: string;
   targetKind: RouteTargetKind;
+  /** Source channel id for outbound delivery routing. */
+  channel?: string;
+  /** Channel-native chat/conversation id for delivery. */
+  chatId?: string;
 }
 
 /** Persisted per-conversation state. */

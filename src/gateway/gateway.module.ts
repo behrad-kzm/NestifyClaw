@@ -32,6 +32,6 @@ import { GatewayService } from './gateway.service';
     DeliveryModule,
   ],
   providers: [{ provide: GATEWAY_PORT, useClass: GatewayService }],
-  exports: [GATEWAY_PORT, ApprovalsModule, NestifyConfigModule],
+  exports: [GATEWAY_PORT, ApprovalsModule, NestifyConfigModule, DeliveryModule],
 })
 export class GatewayModule {}

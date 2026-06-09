@@ -1,32 +1,30 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  STATE_STORE_PORT,
-  type SessionState,
-  type SessionStorePort,
-  type StateStorePort,
-} from '../../common/types';
-
-const SESSIONS_NAMESPACE = 'sessions';
+import { OpenClawSessionStore } from '../../core/sessions/openclaw-session.store';
+import type { SessionState, SessionStorePort } from '../../common/types';
 
 /**
- * Session persistence (bucket D). Backed by the global StateStorePort, so it
- * inherits whatever persistence backend Infra provides.
- *
- * TODO: align with openclaw `session-store-runtime` (transcripts, group
- * history, updatedAt semantics) when wiring the real agent runtime.
+ * Session persistence (bucket D). Backed by OpenClaw-style filesystem store
+ * under NESTIFY_STATE_DIR when configured.
  */
 @Injectable()
 export class SessionsService implements SessionStorePort {
   constructor(
-    @Inject(STATE_STORE_PORT) private readonly state: StateStorePort,
+    @Inject(OpenClawSessionStore)
+    private readonly store: OpenClawSessionStore,
   ) {}
 
   async load(sessionKey: string): Promise<SessionState | null> {
-    return this.state.get<SessionState>(SESSIONS_NAMESPACE, sessionKey);
+    if (!this.store.isConfigured()) {
+      return null;
+    }
+    return this.store.load(sessionKey);
   }
 
   async save(stateToSave: SessionState): Promise<void> {
-    await this.state.set(SESSIONS_NAMESPACE, stateToSave.sessionKey, {
+    if (!this.store.isConfigured()) {
+      return;
+    }
+    await this.store.save({
       ...stateToSave,
       updatedAt: Date.now(),
     });
