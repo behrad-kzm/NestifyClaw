@@ -7,6 +7,6 @@ async function bootstrap() {
   app.enableShutdownHooks();
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
-  new Logger('Bootstrap').log(`kitty-agents listening on port ${port}`);
+  new Logger('Bootstrap').log(`nestify-claw listening on port ${port}`);
 }
 bootstrap();

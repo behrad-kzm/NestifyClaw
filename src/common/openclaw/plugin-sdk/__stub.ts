@@ -3,7 +3,7 @@
  *
  * The vendored connectors (copied unchanged) import ~100 plugin-sdk modules
  * each. Only the inbound read path is implemented for real (see modules marked
- * `@kitty-real`); everything else resolves to a tolerant stub so the extension
+ * `@nestify-real`); everything else resolves to a tolerant stub so the extension
  * loads without crashing. A stub is callable, constructable, and returns itself
  * on property access, so deeply chained SDK calls degrade to no-ops instead of
  * throwing at import time.
@@ -20,7 +20,7 @@
 export type StubAny = any;
 
 export function makeStub(label: string): StubAny {
-  const target = function kittyStub() {
+  const target = function nestifyStub() {
     return stub;
   };
   Object.defineProperty(target, 'name', { value: label, configurable: true });
@@ -28,7 +28,7 @@ export function makeStub(label: string): StubAny {
   const stub: any = new Proxy(target, {
     get(_t, prop) {
       if (prop === 'then') return undefined; // never look like a Promise
-      if (prop === '__kittyStub') return true;
+      if (prop === '__nestifyStub') return true;
       if (prop === Symbol.toPrimitive) return () => undefined;
       if (typeof prop === 'symbol') return undefined;
       if (prop === 'name') return label;

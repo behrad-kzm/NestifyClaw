@@ -1,11 +1,12 @@
 /**
- * Scans vendored openclaw extensions under src/connectors/<channel>/extension for every
+ * Scans vendored openclaw code under src/connectors/<channel>/extension and
+ * src/core/openclaw for every
  * `openclaw/plugin-sdk/*` (and other `openclaw/*`) import, and generates a
  * matching adapter module under src/common/openclaw/** exporting the imported
  * symbols as tolerant stubs.
  *
  * Hand-written real implementations are preserved: any adapter file containing
- * the marker `@kitty-real` is never overwritten.
+ * the marker `@nestify-real` is never overwritten.
  *
  * Run: npm run gen:adapter
  */
@@ -15,6 +16,7 @@ import * as ts from 'typescript';
 
 const ROOT = path.resolve(__dirname, '..');
 const CONNECTORS_DIR = path.join(ROOT, 'src', 'connectors');
+const CORE_OPENCLAW_DIR = path.join(ROOT, 'src', 'core', 'openclaw');
 const ADAPTER_ROOT = path.join(ROOT, 'src', 'common');
 
 type ModuleNeeds = {
@@ -26,7 +28,7 @@ type ModuleNeeds = {
   star: boolean;
 };
 
-const GENERATED_SENTINEL = 'AUTO-GENERATED kitty adapter stub';
+const GENERATED_SENTINEL = 'AUTO-GENERATED nestify adapter stub';
 
 const modules = new Map<string, ModuleNeeds>();
 
@@ -192,7 +194,7 @@ function generate(): void {
     const file = adapterPathFor(spec);
 
     // A file is a hand-written real impl (preserve it) unless it carries the
-    // auto-generated sentinel. We can't key off "@kitty-real" because the
+    // auto-generated sentinel. We can't key off "@nestify-real" because the
     // generated header itself mentions that marker.
     if (fs.existsSync(file)) {
       const existing = fs.readFileSync(file, 'utf8');
@@ -210,7 +212,7 @@ function generate(): void {
     lines.push(`/* ${GENERATED_SENTINEL} for '${spec}'. Do not edit by hand.`);
     lines.push(` * Regenerate with: npm run gen:adapter`);
     lines.push(
-      ` * Add the marker @kitty-real to a hand-written replacement to preserve it. */`,
+      ` * Add the marker @nestify-real to a hand-written replacement to preserve it. */`,
     );
     lines.push(`import { makeStub, type StubAny } from '${stubImport}';`);
     lines.push('');
@@ -259,6 +261,9 @@ function main(): void {
   const files: string[] = [];
   for (const extensionDir of listExtensionDirs()) {
     walk(extensionDir, files);
+  }
+  if (fs.existsSync(CORE_OPENCLAW_DIR)) {
+    walk(CORE_OPENCLAW_DIR, files);
   }
   for (const f of files) collect(f);
   generate();

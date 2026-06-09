@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ConnectorsModule } from './connectors/connectors.module';
 import { CoreModule } from './core/core.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { CoreModule } from './core/core.module';
       envFilePath: ['.env'],
     }),
     CoreModule,
+    GatewayModule,
     ConnectorsModule,
   ],
 })

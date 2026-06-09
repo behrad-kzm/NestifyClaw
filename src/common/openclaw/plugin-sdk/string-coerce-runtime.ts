@@ -1,5 +1,5 @@
 /**
- * @kitty-real
+ * @nestify-real
  *
  * Real implementation of the openclaw `string-coerce-runtime` leaf utilities.
  * These are pure functions ported from openclaw's normalization-core; they are

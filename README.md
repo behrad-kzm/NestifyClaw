@@ -1,99 +1,173 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# nestify-claw
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A [NestJS](https://nestjs.com/) server that hosts [OpenClaw](https://github.com/openclaw/openclaw) agent capabilities with a clear three-layer architecture: **connectors** (platform I/O), **gateway** (message pipeline), and **core** (agent brain).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project lives alongside the OpenClaw monorepo (`../openclaw`). Vendored OpenClaw code is copied in and kept pristine; nestify-owned glue lives in `host/` adapters and NestJS modules.
 
-## Description
+## Architecture
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+```
+Platform (Telegram, WhatsApp, …)
+        │
+        ▼
+┌─────────────────────┐
+│  connectors/        │  Layer 1 — channel I/O
+│    <channel>/
+│      extension/     │  vendored OpenClaw channel plugin
+│      host/          │  NestJS adapter
+└─────────┬───────────┘
+          │ IncomingChannelMessage
+          ▼
+┌─────────────────────┐
+│  gateway/           │  Layer 2 — message pipeline
+│    inbound          │  classify, gate, dedupe
+│    routing          │  pick agent / session
+│    sessions         │  conversation state
+│    delivery         │  outbound replies
+│    media, commands, approvals, config, infra
+│    gateway.service  │  orchestrates the pipeline
+└─────────┬───────────┘
+          │ TurnInput
+          ▼
+┌─────────────────────┐
+│  core/              │  Layer 3 — the brain
+│    openclaw/        │  vendored agent runtime from OpenClaw
+│    host/            │  NestJS adapter (AgentRuntimePort)
+└─────────────────────┘
 ```
 
-## Compile and run the project
+| Layer | Folder | Role |
+|-------|--------|------|
+| **Connectors** | `src/connectors/` | Read/write messages on external platforms |
+| **Gateway** | `src/gateway/` | Route, gate, session, and deliver messages |
+| **Core** | `src/core/` | Run agent turns (LLM, tools, subagents) |
 
-```bash
-# development
-$ npm run start
+Shared contracts (types, port interfaces, DI tokens) live in `src/common/types/`. OpenClaw plugin-sdk adapter stubs are in `src/common/openclaw/plugin-sdk/` (auto-generated via `npm run gen:adapter`).
 
-# watch mode
-$ npm run start:dev
+## Project layout
 
-# production mode
-$ npm run start:prod
+```
+src/
+  connectors/
+    telegram/
+      extension/       # vendored from openclaw/extensions/telegram
+      host/            # NestJS Telegram adapter
+    whatsapp/
+      extension/       # vendored from openclaw/extensions/whatsapp
+      host/            # NestJS WhatsApp adapter
+    connectors.module.ts
+
+  gateway/             # Layer 2 — pipeline modules + orchestrator
+    gateway.module.ts
+    gateway.service.ts
+    inbound/
+    routing/
+    sessions/
+    delivery/
+    media/
+    commands/
+    approvals/
+    config/
+    infra/
+
+  core/                # Layer 3 — agent runtime
+    openclaw/
+      agents/          # vendored from openclaw/src/agents
+      agent-core/      # vendored from openclaw/packages/agent-core
+    host/              # NestJS agent adapter
+    core.module.ts
+
+  common/
+    types/             # shared domain types and port interfaces
+    extension/         # NestifyChannel contract
+    openclaw/          # plugin-sdk adapter stubs
+
+  app.module.ts
+  main.ts
 ```
 
-## Run tests
+### Vendored vs nestify-owned
+
+| Path | Origin | Editable? |
+|------|--------|-----------|
+| `connectors/*/extension/` | Copied from OpenClaw | Keep pristine (like upstream) |
+| `core/openclaw/` | Copied from OpenClaw | Keep pristine |
+| `connectors/*/host/`, `core/host/`, `gateway/` | nestify-claw | Yes — this is where wiring happens |
+| `common/openclaw/plugin-sdk/` | Auto-generated stubs | Regenerate with `gen:adapter`; mark real impls with `@nestify-real` |
+
+Vendored trees are excluded from typecheck and ESLint (same approach as OpenClaw channel extensions).
+
+## Prerequisites
+
+- Node.js 20+
+- npm
+- A sibling checkout of [OpenClaw](../openclaw) when refreshing vendored code
+
+## Setup
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
+cp .env.example .env
+# Edit .env — see Environment variables below
 ```
 
-## Deployment
+## Environment variables
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `TELEGRAM_BOT_TOKEN` | For Telegram | Bot token from [@BotFather](https://t.me/BotFather). If unset, Telegram stays off with a warning. |
+| `WHATSAPP_ENABLED` | For WhatsApp | Set to `true` to start the WhatsApp connector (QR pairing). Default: disabled. |
+| `PORT` | No | HTTP port (default `3000`). |
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+WhatsApp uses dynamic `import('baileys')` so the app can boot without loading baileys until explicitly enabled.
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+## Scripts
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+| Command | Description |
+|---------|-------------|
+| `npm run start` | Dev server (`tsx src/main.ts`) |
+| `npm run start:dev` | Dev server with watch |
+| `npm run build` | Typecheck, then bundle to `dist/main.mjs` (esbuild) |
+| `npm run typecheck` | Type-check nestify-owned code only |
+| `npm run start:prod` | Run production bundle (`node dist/main.mjs`) |
+| `npm run gen:adapter` | Scan vendored OpenClaw imports and regenerate plugin-sdk stubs |
+| `npm run lint` | ESLint |
+| `npm run test` | Jest unit tests |
 
-## Resources
+### Build notes
 
-Check out a few resources that may come in handy when working with NestJS:
+- **Development** uses `tsx` to run TypeScript directly.
+- **Production** uses esbuild (`scripts/build.ts`) to bundle the app; `node_modules` stay external.
+- Vendored OpenClaw code under `connectors/*/extension/` and `core/openclaw/` is bundled but not type-checked against nestify stubs (OpenClaw targets its own SDK types).
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Current status
 
-## Support
+| Area | Status |
+|------|--------|
+| Three-layer module structure | In place |
+| Telegram / WhatsApp connectors | Host adapters log inbound messages; not yet wired to `GatewayPort` |
+| Gateway pipeline | Stub implementations; end-to-end flow is runnable |
+| Core agent runtime | Stub `runTurn` echo; vendored OpenClaw agents present but not wired |
+| Plugin SDK | Stub adapters (~120 modules); real implementations added incrementally |
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Adding a channel
 
-## Stay in touch
+1. Copy the OpenClaw extension into `src/connectors/<channel>/extension/`.
+2. Add a NestJS host under `src/connectors/<channel>/host/` implementing `NestifyChannel`.
+3. Register the host module in `connectors/connectors.module.ts`.
+4. Run `npm run gen:adapter` to refresh plugin-sdk stubs.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Relationship to OpenClaw
+
+nestify-claw is **not** a full OpenClaw port. It reuses vendored slices of OpenClaw (two channels, agent runtime) inside a NestJS structure. Still in OpenClaw only (not copied here):
+
+- ~100+ other channel extensions
+- Full `openclaw/src/gateway/` server (~700 files)
+- Real `plugin-sdk` and supporting packages (`llm-runtime`, `media-core`, …)
+- CLI, web UI, daemon, and plugin ecosystem
+
+See the [OpenClaw docs](https://github.com/openclaw/openclaw/tree/main/docs) for the upstream architecture.
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+UNLICENSED (private).

@@ -6,7 +6,7 @@ import { WhatsappModule } from './whatsapp/host/whatsapp.module';
  * Registry of all connectors: the modules through which inbound messages enter
  * the system. Each channel lives under src/connectors/<channel>/ with:
  *   extension/ — vendored openclaw plugin (kept pristine)
- *   host/      — NestJS adapter that wires the extension into kitty-agents
+ *   host/      — NestJS adapter that wires the extension into nestify-claw
  */
 @Module({
   imports: [TelegramModule, WhatsappModule],

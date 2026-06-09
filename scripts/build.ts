@@ -1,5 +1,5 @@
 /**
- * Build script for kitty-agents.
+ * Build script for nestify-claw.
  *
  * We bundle with esbuild rather than `tsc`/`nest build` on purpose: vendored
  * openclaw connectors are authored against openclaw's real SDK types, so
@@ -8,7 +8,7 @@
  * the reachable graph, resolves the `openclaw/*` path alias from tsconfig, and
  * rewrites the connectors' ESM `.js` import specifiers to their `.ts` sources.
  *
- * Use `npm run typecheck` to type-check kitty's own framework code.
+ * Use `npm run typecheck` to type-check nestify-owned framework code.
  */
 import * as fs from 'node:fs';
 import * as path from 'node:path';

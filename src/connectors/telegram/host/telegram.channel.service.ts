@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { Bot } from 'grammy';
 import type { Message } from 'grammy/types';
 import { run, type RunnerHandle } from '@grammyjs/runner';
-import type { KittyChannel } from '../../../common/extension/kitty-extension';
+import type { NestifyChannel } from '../../../common/extension/nestify-extension';
 // Pure parsing helpers from the vendored openclaw extension (copied unchanged).
 // Resolved through the src/common openclaw adapter.
 import {
@@ -19,12 +19,12 @@ import {
 
 /**
  * Host module glue that runs the vendored Telegram extension's bot engine and
- * prints every incoming message. This is the kitty-agents adapter that turns
+ * prints every incoming message. This is the nestify-claw adapter that turns
  * the copied openclaw extension into a NestJS-managed channel.
  */
 @Injectable()
 export class TelegramChannelService
-  implements KittyChannel, OnApplicationBootstrap, OnModuleDestroy
+  implements NestifyChannel, OnApplicationBootstrap, OnModuleDestroy
 {
   readonly id = 'telegram';
 

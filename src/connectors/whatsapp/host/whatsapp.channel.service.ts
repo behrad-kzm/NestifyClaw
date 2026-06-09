@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import type { WASocket } from 'baileys';
 import * as qrcode from 'qrcode-terminal';
-import type { KittyChannel } from '../../../common/extension/kitty-extension';
+import type { NestifyChannel } from '../../../common/extension/nestify-extension';
 
 const AUTH_DIR = '.wa-auth';
 
@@ -23,7 +23,7 @@ type BaileysModule = typeof import('baileys');
  */
 @Injectable()
 export class WhatsappChannelService
-  implements KittyChannel, OnApplicationBootstrap, OnModuleDestroy
+  implements NestifyChannel, OnApplicationBootstrap, OnModuleDestroy
 {
   readonly id = 'whatsapp';
 
@@ -98,7 +98,7 @@ export class WhatsappChannelService
       auth: state,
       logger: silentLogger,
       markOnlineOnConnect: false,
-      browser: ['kitty-agents', 'Chrome', '1.0.0'],
+      browser: ['nestify-claw', 'Chrome', '1.0.0'],
     });
     this.sock = sock;
 
