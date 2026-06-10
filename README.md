@@ -101,7 +101,7 @@ Vendored trees are excluded from typecheck and ESLint (same approach as OpenClaw
 
 - Node.js 20+
 - npm
-- A sibling checkout of [OpenClaw](../openclaw) when refreshing vendored code
+- A sibling checkout of [OpenClaw](./openclaw) when refreshing vendored code
 
 ## Setup
 
@@ -118,6 +118,9 @@ cp .env.example .env
 | `TELEGRAM_BOT_TOKEN` | For Telegram | Bot token from [@BotFather](https://t.me/BotFather). If unset, Telegram stays off with a warning. |
 | `WHATSAPP_ENABLED` | For WhatsApp | Set to `true` to start the WhatsApp connector (QR pairing). Default: disabled. |
 | `PORT` | No | HTTP port (default `3000`). |
+| `SESSION_DM_SCOPE` | No | DM isolation: `main` (default), `per-peer`, `per-channel-peer`, `per-account-channel-peer`. Use `per-channel-peer` for multi-user bots. |
+| `SESSION_MAIN_KEY` | No | Main DM bucket name when `SESSION_DM_SCOPE=main` (default `main`). |
+| `SESSION_IDENTITY_LINKS` | No | JSON map linking one person across channels (OpenClaw `session.identityLinks`). |
 
 WhatsApp uses dynamic `import('baileys')` so the app can boot without loading baileys until explicitly enabled.
 
@@ -171,4 +174,4 @@ See the [OpenClaw docs](https://github.com/openclaw/openclaw/tree/main/docs) for
 
 ## License
 
-[MIT](LICENSE)
+[MIT](services/nestify-claw/LICENSE)
