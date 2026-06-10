@@ -101,7 +101,7 @@ Vendored trees are excluded from typecheck and ESLint (same approach as OpenClaw
 
 - Node.js 20+
 - npm
-- A sibling checkout of [OpenClaw](../openclaw) when refreshing vendored code
+- A sibling checkout of [OpenClaw](./openclaw) when refreshing vendored code
 
 ## Setup
 
@@ -174,4 +174,4 @@ See the [OpenClaw docs](https://github.com/openclaw/openclaw/tree/main/docs) for
 
 ## License
 
-[MIT](LICENSE)
+[MIT](services/nestify-claw/LICENSE)
